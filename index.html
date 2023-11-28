@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>간단한 홈페이지</title>
+  <title> 1차 지인 검증 화면입니다. </title>
   <style>
     /* CSS를 사용하여 입력창을 화면 가운데 정렬 */
     #inputContainer {
@@ -19,7 +19,7 @@
 </head>
 <body>
   <div id="inputContainer">
-    <input type="text" id="inputText" placeholder="A열 데이터 입력">
+    <input type="text" id="inputText" placeholder="아이디를 @와 함께 입력하세요.">
     <button onclick="handleButtonClick()">확인</button> <!-- 버튼 추가 -->
   </div>
 
@@ -60,12 +60,12 @@
         for (let i = 0; i < data.length; i++) {
           if (data[i][0] === input) {
             found = true;
-            const nextChar = String.fromCharCode(67 + counter); // 다음 문자열의 알파벳 구하기
+            const nextChar = String.fromCharCode(66 + counter); // 다음 문자열의 알파벳 구하기 (A: 65, B: 66, ...)
             gapi.client.sheets.spreadsheets.values.update({
               spreadsheetId: spreadsheetId,
               range: `B${i+1}`,
               valueInputOption: 'RAW',
-              values: [['O']]
+              values: [[ 'O' ]]
             }).then(function(response) {
               console.log(`B${i+1}에 O 표시 완료`);
             });
