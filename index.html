@@ -22,7 +22,6 @@
     <input type="text" id="inputText" placeholder="A열 데이터 입력">
     <button onclick="handleButtonClick()">확인</button> <!-- 버튼 추가 -->
   </div>
-  <div id="result"></div>
 
   <script src="https://apis.google.com/js/api.js"></script>
   <script>
@@ -76,11 +75,10 @@
         }
 
         // 결과 표시
-        const resultDiv = document.getElementById('result');
         if (found) {
-          resultDiv.innerHTML = `1차 지인입니다. 해당 경로로 이동하세요.`;
+          window.location.href = `result.html?message=1차%20지인입니다.%20해당%20경로로%20이동하세요.`;
         } else {
-          resultDiv.innerHTML = `허락되지 않은 사용자입니다.`;
+          window.location.href = `result.html?message=허락되지%20않은%20사용자입니다.`;
         }
       });
     }
