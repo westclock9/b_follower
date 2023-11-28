@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>간단한 홈페이지</title>
+  <style>
+    /* CSS를 사용하여 입력창을 화면 가운데 정렬 */
+    #inputContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #inputText {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div id="inputContainer">
+    <input type="text" id="inputText" placeholder="A열 데이터 입력" onkeypress="handleKeyPress(event)">
+  </div>
+  <div id="result"></div>
+
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script>
+    // API 키 및 스프레드시트 ID
+    const apiKey = 'AIzaSyAPUlodVvyy4ioArdkPT_fZTSp50c7fXvo';
+    const spreadsheetId = '1VGYt_FiOJZVJ_Fp_DpN0KpEyC4Uy6jbLlGgiUYyRxg8';
+    let counter = 0;
+
+    // 구글 시트 API 초기화
+    function initClient() {
+      gapi.client.init({
+        'apiKey': apiKey,
+        'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+      }).then(function() {
+        console.log('Google Sheets API initialized');
+      });
+    }
+
+    // API를 로드하고 구글 시트 API 초기화
+    gapi.load('client', initClient);
+
+    // 엔터 키 눌렀을 때 처리하는 함수
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        const input = document.getElementById('inputText').value.trim(); // 입력값 가져오기
+        if (input === '') return; // 입력값이 없으면 처리 중지
+
+        // 구글 시트 API를 사용하여 A열 데이터와 비교
+        gapi.client.sheets.spreadsheets.values.get({
+          spreadsheetId: spreadsheetId,
+          range: 'A1:A99' // 읽어올 범위 설정
+        }).then(function(response) {
+          const data = response.result.values; // 시트에서 읽어온 데이터
+          let found = false;
+
+          // A열의 값과 사용자 입력값 비교
+          for (let i = 0; i < data.length; i++) {
+            if (data[i][0] === input) {
+              found = true;
+              const nextChar = String.fromCharCode(67 + counter); // 다음 문자열의 알파벳 구하기
+              gapi.client.sheets.spreadsheets.values.update({
+                spreadsheetId: spreadsheetId,
+                range: `B${i+1}`,
+                valueInputOption: 'RAW',
+                values: [['O']]
+              }).then(function(response) {
+                console.log(`B${i+1}에 O 표시 완료`);
+              });
+              counter++;
+              break;
+            }
+          }
+
+          // 결과 표시
+          const resultDiv = document.getElementById('result');
+          if (found) {
+            resultDiv.innerHTML = `해당 경로로 이동해 주세요.`;
+          } else {
+            resultDiv.innerHTML = `해당하는 값이 없습니다.`;
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
